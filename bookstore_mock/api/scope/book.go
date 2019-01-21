@@ -1,6 +1,7 @@
 package api
 
 import (
+	//	"encoding/json"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -68,9 +69,42 @@ func getBookByTitle(c *gin.Context) {
 func updateBookInfo(c *gin.Context) {
 	// http request param get
 	id := c.Param("id")
-	column := c.Request.Body
 
-	c.String(http.StatusOK, "updateBookInfo %s : %v", id, column)
+	// update target info format is JSON
+	var target Book
+	if err := c.ShouldBind(&target); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": "unauthorized"})
+		return
+	}
+
+	log.Println(target)
+
+	// get target book info
+	db := dbConnect("mysql", "api", "api", "password")
+
+	// check target data existent
+	var book Book
+	if err := db.Get(&book, "select * from book where id=?", id); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": err})
+		return
+	}
+
+	log.Println(book)
+
+	book.Label = target.Label
+
+	// tranxaction start
+	tx := db.MustBegin()
+	tx.NamedExec("update book set label = :label where id = :id", book)
+	tx.Commit()
+
+	// Query the database, storing results in book
+	db.Get(&book, "select * from book where id=?", id)
+
+	log.Println(book)
+
+	c.JSON(http.StatusOK, gin.H{"satus": "updateBookInfo"})
+
 }
 
 // addBookInfo is book table insert method.
