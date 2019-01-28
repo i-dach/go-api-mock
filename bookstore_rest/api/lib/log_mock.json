@@ -1,0 +1,13 @@
+{
+	"time"      : "Thu, 04 Oct 2014 23:59:45 GMT",				// RFC1123(JST)
+	"level"     : "err",							// Log level
+	"title"     : "[Exception] kubectl process can't action",		// Log title
+	"status"    : "stop",							// Process status
+	"exception" : "Unable to connect to the server: EOF",			// ERR detail
+	"msg"	    : "perhaps... CPU upper over limit exceeded",		// Developer Message
+	"retry"	    : "",							// If func have retry structure, Retry count print
+	"file"	    : "setup.go",						// Doing func used file
+	"func"	    : "update(namespase string, value string)",			// Doing func fullname
+	"args"	    : ["kube-system","helm/elastic-search/values.yaml"],	// Doing args
+	"document"  : "https://qiita.com/secondly/items/9c0ecd9c3ce583f6e0d3",	// Helpper link 
+}
