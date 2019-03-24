@@ -1,1 +1,0 @@
-INSERT INTO book (id,title,label) VALUES ('st.sol.18', 'solr starting','storage');
