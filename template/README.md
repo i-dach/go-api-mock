@@ -1,29 +1,43 @@
-# What's template?
-- target: micro service scope (not ECS's service)
-- application specification  -> app/README.md
-- middlewere specification  -> middle/README.md
+# What's this?
+- Golang API for Web service.
+
+# Target
+- Used by micro service architecture.
+
+# How to play?
+1. install golang
+1. setting $GOPATH
+1. run process `docker build & run`
+	```
+	docker build -t api_tmp .
+	docker run -d -p 8080:8080 api_tmp:latest
+	```
+
+1. you'll see "Hello World!" when you access to localhost:8080 it printing.
+
+# How to development?
+
+- If you need path "/bookmanage" URI, when you will create "bookmanege" directory into src directory.
+- First, you should be created "hoge.doc".
+- You must write "bookmanage" specification documentation to "hoge.doc".
+- Break down the text written in "hoge.doc" and make it a list of function have return values.
+- Sort functions in order of ease of creation.
+- Next, Copy one of the created functions to "hoge_test.go".
+- After that, develop according to TDD.
 
 # Directory structure
 
 ```
-	.
-	├── README.md 				// リポジトリはTask(Pod)単位で作成。スコープはサービス 
-	├── setup.sh				// aws configure, ecs-cli, docker-composeとか開発に必要な環境のセットアップ
-	├── Makefile				// ECS,ECRへのデプロイ、イメージ参照先の（ローカル - ECR）の切り替え、初期cluster作成など
-	├── docker-comopose.yaml		// このサービスの依存関係を記す
-	├── app					// Applicationのディレクトリ。サーバーサイドやクライアントで動くものはこっち
-	│   ├── README.md 			// 仕様書。どんなURIがあってどんな機能なのか、呼び出し方、引数、メソッドを記す
-	│   ├── Dockerfile			// アプリケーション用Docker image
-	│   └── rest 				// RESTfull アーキテクチャで組んだAPI用のディレクトリ。 gRPCならgRPC, graphQLならgrqphQL
-	│       ├── main.go 			// routerに引き渡すファイル。serverの受け口であり、golang実行用サーバーを立てる子。
-	│       └── scope			
-	│          └── router.go 		// 各エンドポイントにルーティングする子
-	│          └── hoge.go 			// 各エンドポイントの処理用interface
-	│          └── hoge_event.go		// 各エンドポイントの実際の処理
-	│          └── hoge_test.go		// 各エンドポイントのテストコード
-	├── middle
-	│   ├── README.md 			// ミドルウェア用の仕様書。どんな要件を満たすのか、等を定義
-	│   └── nginx
-	│       └── Dockerfile			// 各ミドルウェア用Docker image。専用のカスタマイズがある場合のみ作成
-	└── mock				// mock用のデータ置き場。api用のデータは基本JSONで記述
+.
+├── Dockerfile				// Buildしたmain.exc ファイルしか
+├── README.md
+├── setup.sh				// $GOPATH以外で開発する時にでも$GOPATHからこのプロジェクトを参照されるようにするマジックアイテム
+└── src
+    ├── main.go				// serverを立ち上げるgo file
+    ├── hoge				// URIベースで作成したディレクトリ
+    │   ├── hoge.doc		// テストコードの元となる受け入れ条件を記載したドキュメント
+    │   ├── hoge.go			// URIベースのコード
+    │   └── hoge_test.go	// テストコード
+    ├── ....
+    └── foo
 ```
