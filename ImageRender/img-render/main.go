@@ -2,11 +2,24 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
+
+type object struct {
+}
+
+type shelf struct {
+	obj []object
+}
+
+// configer is JSONからレンダリングに関する指定を取得し、各値を設定する
+func configer(path string, s *shelf) error {
+	return errors.New("aaaa")
+}
 
 func handler(ctx context.Context, s3Event events.S3Event) {
 	for _, record := range s3Event.Records {
