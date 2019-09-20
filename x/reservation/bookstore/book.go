@@ -1,4 +1,4 @@
-package api
+package bookstore
 
 import (
 	//	"encoding/json"
@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	apm "go-api-mock/x/apm"
 )
 
 // Book is DB table structure.
@@ -24,7 +25,7 @@ type Book struct {
 *********************************************/
 
 func dbConnect(engine string, dbn string, user string, pwd string) *sqlx.DB {
-	db, err := sqlx.Connect(engine, user+":"+pwd+"@tcp(db:3306)/"+dbn+"?parseTime=true")
+	db, err := sqlx.Connect(engine, user+":"+pwd+"@tcp(reservedb.ekiten.local:3306)/"+dbn+"?parseTime=true")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -36,16 +37,21 @@ func dbConnect(engine string, dbn string, user string, pwd string) *sqlx.DB {
 *                API METHOD                   *
 **********************************************/
 
-func getBookList(c *gin.Context) {
-	db := dbConnect("mysql", "api", "api", "password")
+func GetBookList(c *gin.Context) {
+	apm.TraceSeg(c, "/bookmanage")
+	db := dbConnect("mysql", "ekiten_reserve", "writer", "wr1t5r$1")
 
 	books := []Book{}
 	db.Select(&books, "select * from book")
 
-	c.String(200, "getBookList : %v", books)
+	// c.String(200, "getBookList : %v", books)
+
+	c.JSON(200, gin.H{
+		"books": books,
+	})
 }
 
-func getBookByTitle(c *gin.Context) {
+func GetBookByTitle(c *gin.Context) {
 	books := []Book{}
 
 	title := c.Param("title")
@@ -66,7 +72,7 @@ func getBookByTitle(c *gin.Context) {
 	})
 }
 
-func updateBookInfo(c *gin.Context) {
+func UpdateBookInfo(c *gin.Context) {
 	// http request param get
 	id := c.Param("id")
 
@@ -109,7 +115,7 @@ func updateBookInfo(c *gin.Context) {
 
 // addBookInfo is book table insert method.
 // this func used URI (title) & http request body params.
-func addBookInfo(c *gin.Context) {
+func AddBookInfo(c *gin.Context) {
 	// post data get
 	title := c.PostForm("title")
 	label := c.PostForm("label")
@@ -144,7 +150,7 @@ func addBookInfo(c *gin.Context) {
 	})
 }
 
-func delBookInfo(c *gin.Context) {
+func DelBookInfo(c *gin.Context) {
 	// delete method data get
 	id := c.Param("id")
 	m := map[string]interface{}{"id": id}
