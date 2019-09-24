@@ -1,7 +1,7 @@
 package router
 
 import (
-	"go-api-mock/x/qiita"
+	q "go-api-mock/x/qiita"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,10 +19,10 @@ func Router(r *gin.Engine) error {
 	})
 
 	// Simple group
-	q := r.Group("/qiita/trend")
+	qiita := r.Group("/qiita")
 	{
-		q.GET("/", qiita.Trend)
-		q.GET("/:tag", qiita.TagTrend)
+		qiita.GET("/trend", q.Trend)
+		// q.GET("/:tag", q.TagTrend)
 	}
 
 	return nil
