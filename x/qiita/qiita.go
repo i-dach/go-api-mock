@@ -70,6 +70,8 @@ func GetItem(api string) (*[]Item, error) {
 		}
 	}
 
+	fmt.Println(data)
+
 	return &data, nil
 }
 
@@ -87,18 +89,10 @@ func Trend(c *gin.Context) {
 		return
 	}
 
-	// var jsonBody map[string]interface{}
-	// if err = json.Unmarshal(body[:len(body)], &jsonBody); err != nil && err != io.EOF {
-	// 	msg = fmt.Sprint(err)
-	// 	f.Resp(c, msg)
-	// }
-
-	//	msg = fmt.Sprint("aaa")
+	fmt.Println(data)
 
 	f = Success()
-	f.Resp(c, data)
-
-	// return nil
+	f.Resp(c, fmt.Sprintln(data))
 }
 
 // TagTrend = qiita trend tag get
