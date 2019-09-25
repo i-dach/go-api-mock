@@ -3,10 +3,11 @@ package qiita
 import "testing"
 
 func TestGetItem(t *testing.T) {
-	var d interface{}
-	if err := GetItem(&d); err != nil {
+	data, err := GetItem(api)
+	if err != nil {
 		t.Error(err)
 	}
+	t.Log(data)
 }
 
 func TestTagTrend(t *testing.T) {

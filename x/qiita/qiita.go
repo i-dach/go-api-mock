@@ -37,10 +37,18 @@ func Error() Qiita {
 	})
 }
 
-func GetItem(api string, d *interface{}) error {
+type Body struct {
+	result interface{} `json:"result"`
+}
+
+type Item struct {
+	title string `json:"title"`
+}
+
+func GetItem(api string) (*[]Item, error) {
 	u, err := url.Parse(api)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	fmt.Println(u.String())
@@ -48,14 +56,21 @@ func GetItem(api string, d *interface{}) error {
 	resp, err := http.Get(u.String())
 	defer resp.Body.Close()
 
-	fmt.Println(resp)
-
-	if err = json.NewDecoder(resp.Body).Decode(&d); err != nil {
-		return err
+	var row []map[string]interface{}
+	if err = json.NewDecoder(resp.Body).Decode(&row); err != nil {
+		return nil, err
 	}
-	fmt.Println(d)
 
-	return nil
+	var data []Item
+	for _, r := range row {
+		for k, v := range r {
+			if str, ok := v.(string); ok && k == "title" {
+				data = append(data, Item{str})
+			}
+		}
+	}
+
+	return &data, nil
 }
 
 // Trend = qiita trend get
@@ -64,9 +79,9 @@ func Trend(c *gin.Context) {
 
 	f := Error()
 	var msg string
-	var data interface{}
+	data, err := GetItem(api)
 
-	if err := GetItem(api, &data); err != nil {
+	if err != nil {
 		msg = fmt.Sprint(err)
 		f.Resp(c, msg)
 		return
