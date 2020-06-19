@@ -1,9 +1,6 @@
 # このmain.goで負担すること
 ======================
 
-## 資料
-https://design1.atlassian.net/wiki/spaces/EKITEN/pages/35160539/Lambda+S3
-
 ## 全体概要
 1. S3のオリジナル画像用バケットに画像がputされてLambda-Aがキックされる
 2. Lambda-Aではjpg, gif, pngの場合に「画像の圧縮　→画像のトリミング　→受け取ったオブジェクトのパスと同一階層のオブジェクトを参照用バケットに作成」を行う

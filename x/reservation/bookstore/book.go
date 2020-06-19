@@ -2,14 +2,15 @@ package bookstore
 
 import (
 	//	"encoding/json"
-	"github.com/gin-gonic/gin"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
+	apm "go-api-mock/x/apm"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
-	apm "go-api-mock/x/apm"
+
+	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 )
 
 // Book is DB table structure.
@@ -25,7 +26,7 @@ type Book struct {
 *********************************************/
 
 func dbConnect(engine string, dbn string, user string, pwd string) *sqlx.DB {
-	db, err := sqlx.Connect(engine, user+":"+pwd+"@tcp(reservedb.ekiten.local:3306)/"+dbn+"?parseTime=true")
+	db, err := sqlx.Connect(engine, user+":"+pwd+"@tcp(localhost:3306)/"+dbn+"?parseTime=true")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -39,7 +40,7 @@ func dbConnect(engine string, dbn string, user string, pwd string) *sqlx.DB {
 
 func GetBookList(c *gin.Context) {
 	apm.TraceSeg(c, "/bookmanage")
-	db := dbConnect("mysql", "ekiten_reserve", "writer", "wr1t5r$1")
+	db := dbConnect("mysql", "sample", "writer", "wr1t5r$1")
 
 	books := []Book{}
 	db.Select(&books, "select * from book")
